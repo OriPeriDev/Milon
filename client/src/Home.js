@@ -65,7 +65,7 @@ function Home() {
                   By {row.sub ? (
                     <span 
                       onClick={() => handleUserClick(row.sub, row.userName)}
-                      style={{ cursor: 'pointer', color: 'blue', textDecoration: 'underline' }}
+                      style={{ cursor: 'pointer', textDecoration: 'underline' }}
                     >
                       {row.userName || 'Anonymous'}
                     </span>
