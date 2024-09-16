@@ -1,18 +1,20 @@
 :root {
   --text-color: #FFE347;
+  --font-primary: 'Assistant', sans-serif;
 }
 
 body {
   background-color: #08042A;
   margin: 0;
   padding: 0;
-  font-family: Arial, sans-serif;
+  font-family: var(--font-primary);
+  font-weight: 400;
 }
 
 .App {
-  color: #FFE347;
+  color: var(--text-color);
   text-align: center;
-  font-family: Arial, sans-serif;
+  font-family: var(--font-primary);
 }
 
 .App-logo {
@@ -55,16 +57,77 @@ nav {
   top: 0;
   z-index: 1000;
   background-color: #443259;
-  padding: 10px;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-primary);
 }
 
-nav a {
+.nav-left, .nav-right {
+  display: flex;
+  align-items: center;
+}
+
+.nav-right {
+  gap: 10px;
+}
+
+nav a, nav button {
   color: var(--text-color);
   text-decoration: none;
-  padding: 10px;
-  margin-right: 10px;
+  padding: 8px 12px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+  font-weight: 500;
 }
 
-nav a:hover {
-  background-color: #555;
+nav a:hover, nav button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+nav button {
+  background-color: transparent;
+  border: 1px solid var(--text-color);
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.profile-container {
+  position: relative;
+}
+
+.profile-picture {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.profile-menu {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  background-color: #443259;
+  border: 1px solid #554370;
+  border-radius: 4px;
+  padding: 10px;
+  z-index: 1000;
+}
+
+.profile-menu button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  margin-bottom: 5px;
+  border: none;
+  background: none;
+  color: var(--text-color);
+  cursor: pointer;
+  font-family: var(--font-primary);
+  font-weight: 400;
+}
+
+.profile-menu button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
 }

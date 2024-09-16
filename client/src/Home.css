@@ -23,14 +23,41 @@
   color: white;
   background-color: #090446;
   border: 1px solid #ddd;
-  margin-bottom: 10px;
-  height: 150px;
+  margin-bottom: 24px;
+  min-height: 150px; /* Changed from fixed height to min-height */
   padding: 10px;
   border-radius: 4px;
+  display: flex; /* Added */
+  flex-direction: column; /* Added */
 }
 
 .Home li:hover {
   background-color: #0e075a;
+}
+
+.Home li h1 {
+  margin-top: 0; /* Added */
+  margin-bottom: 10px; /* Added */
+}
+
+.Home li .definition {
+  flex-grow: 1; /* Added */
+  overflow-wrap: break-word; /* Added */
+  word-wrap: break-word; /* Added for better browser support */
+  hyphens: auto; /* Added */
+}
+
+.Home li .word {
+  flex-grow: 1; /* Added */
+  overflow-wrap: break-word; /* Added */
+  word-wrap: break-word; /* Added for better browser support */
+  hyphens: auto; /* Added */
+}
+
+.sub {
+  font-size: 0.8em;
+  color: #666;
+  margin-top: 5px;
 }
 
 

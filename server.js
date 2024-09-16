@@ -1,6 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 const sqlite3 = require('sqlite3').verbose();
+require('dotenv').config();
+const { ManagementClient } = require('auth0');
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -17,25 +19,79 @@ const db = new sqlite3.Database('./dictionary.sqlite', sqlite3.OPEN_READWRITE, (
 app.use(cors());
 app.use(express.json());
 
-app.get('/api/hello', (req, res) => {
-    db.all("SELECT * FROM dict", [], (err, rows) => {
-      if (err) {
-        res.status(500).json({ error: err.message });
-        return;
-      }
-      res.json({ message: 'Hello from server!', newRowId: this.lastID, rows: rows });
+app.get('/api/hello', async (req, res) => {
+  try {
+    const rows = await new Promise((resolve, reject) => {
+      db.all("SELECT * FROM dict", [], (err, rows) => {
+        if (err) reject(err);
+        else resolve(rows);
+      });
     });
+
+    if (rows.length === 0) {
+      return res.json({ message: 'No words found in the dictionary.' });
+    }
+
+    const enrichedRows = await Promise.all(rows.map(async (row) => {
+      let userName = 'Unknown User';
+      if (row.sub) {
+        try {
+          const response = await auth0.users.get({ id: row.sub });
+          const userData = response.data;
+          userName = userData.nickname || userData.name || 'Anonymous';
+        } catch (authError) {
+          console.error(`Error fetching user from Auth0 for sub ${row.sub}:`, authError);
+        }
+      }
+      // Remove 'sub' from the response data
+      const { sub, ...rowWithoutSub } = row;
+      return { ...rowWithoutSub, userName };
+    }));
+
+    console.log(enrichedRows);
+
+    res.json({ 
+      message: `Hello! Found ${enrichedRows.length} entries.`, 
+      rows: enrichedRows 
+    });
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: 'An error occurred while processing the request' });
+  }
 });
 
 app.post('/api/add-word', (req, res) => {
-  const { word, definition } = req.body;
-  db.run("INSERT INTO dict (word, definition) VALUES (?, ?)", [word, definition], function(err) {
+  const { word, definition, sub } = req.body;
+
+  db.run("INSERT INTO dict (word, definition, sub) VALUES (?, ?, ?)", [word, definition, sub], function(err) {
     if (err) {
       res.status(500).json({ error: err.message });
       return;
     }
     res.json({ message: 'Word added successfully', newRowId: this.lastID });
   });
+});
+
+const auth0 = new ManagementClient({
+  domain: process.env.AUTH0_DOMAIN,
+  clientId: process.env.AUTH0_CLIENT_ID,
+  clientSecret: process.env.AUTH0_CLIENT_SECRET,
+  scope: 'read:users',
+  audience: `https://${process.env.AUTH0_DOMAIN}/api/v2/`,
+  tokenProvider: {
+    enableCache: true,
+    cacheTTLInSeconds: 3600
+  }
+});
+
+app.get('/users', async (req, res) => {
+  try {
+    const users = await auth0.users.getAll();
+    res.json(users);
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: 'An error occurred while fetching users' });
+  }
 });
 
 app.listen(port, () => {
