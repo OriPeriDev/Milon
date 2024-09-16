@@ -51,14 +51,12 @@ function Profile() {
     <div className="Profile">
         {profileUser ? (
         <>
-      <h2>{profileUser.nickname}'s Profile</h2>
-      
-          <h3>User's Words</h3>
+      <h2>{userWords.length} definition{userWords.length === 1 ? '' : 's'} by {profileUser.nickname}</h2>
           {userWords.length > 0 ? (
             <ul>
               {userWords.map(word => (
-                <li key={word.id}>
-                  <strong>{word.word}</strong>
+                <li key={word.id} >
+                  <strong className='profile-word'>{word.word}</strong>
                   <p>{word.definition}</p>
                 </li>
               ))}

@@ -17,6 +17,9 @@
 
 .Home .word {
     color: var(--text-color);
+    font-size: 35px;
+    margin-bottom: 6px;
+    margin-top: 14px;
 }
 
 .Home li {

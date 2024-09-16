@@ -20,9 +20,13 @@ app.use(cors());
 app.use(express.json());
 
 app.get('/api/hello', async (req, res) => {
+  const page = parseInt(req.query.page) || 1;
+  const limit = 17;
+  const offset = (page - 1) * limit;
+
   try {
     const rows = await new Promise((resolve, reject) => {
-      db.all("SELECT * FROM dict", [], (err, rows) => {
+      db.all("SELECT * FROM dict LIMIT ? OFFSET ?", [limit, offset], (err, rows) => {
         if (err) reject(err);
         else resolve(rows);
       });
@@ -48,10 +52,18 @@ app.get('/api/hello', async (req, res) => {
       return { ...row, userName };
     }));
 
+    const totalCount = await new Promise((resolve, reject) => {
+      db.get("SELECT COUNT(*) as count FROM dict", (err, row) => {
+        if (err) reject(err);
+        else resolve(row.count);
+      });
+    });
 
     res.json({ 
-      message: `Hello! Found ${enrichedRows.length} entries.`, 
-      rows: enrichedRows 
+      message: `Hello! Found ${totalCount} entries.`, 
+      rows: enrichedRows,
+      totalCount,
+      hasMore: offset + limit < totalCount
     });
   } catch (error) {
     console.error('Error:', error);
