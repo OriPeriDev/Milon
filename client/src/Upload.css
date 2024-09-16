@@ -1,0 +1,52 @@
+.Upload {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.Upload h1 {
+  text-align: center;
+  color: var(--text-color);
+}
+
+.Upload form {
+  display: flex;
+  flex-direction: column;
+}
+
+.Upload form div {
+  margin-bottom: 15px;
+}
+
+.Upload label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.Upload input[type="text"],
+.Upload textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.Upload textarea {
+  height: 100px;
+  resize: vertical;
+}
+
+.Upload button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.Upload button:hover {
+  background-color: #45a049;
+}
