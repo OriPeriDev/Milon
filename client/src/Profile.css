@@ -1,0 +1,67 @@
+.Profile {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  color: var(--text-color);
+  font-family: var(--font-primary);
+}
+
+.Profile h2 {
+  border-bottom: 2px solid var(--text-color);
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+}
+
+.Profile p {
+  color: white;
+  margin-bottom: 10px;
+}
+
+.Profile h3 {
+  margin-top: 30px;
+  margin-bottom: 15px;
+}
+
+.Profile ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.Profile li {
+  background-color: #090446;
+  border: 1px solid #ddd;
+  margin-bottom: 15px;
+  min-height: 100px;
+  padding: 15px;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+}
+
+.Profile li:hover {
+  background-color: #0e075a;
+}
+
+.Profile li strong {
+  font-size: 1.2em;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.Profile li p {
+  color: white;
+  flex-grow: 1;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  hyphens: auto;
+}
+
+.Profile .no-words {
+  font-style: italic;
+  color: #888;
+}
+
+.Profile .loading {
+  font-style: italic;
+  color: #888;
+}

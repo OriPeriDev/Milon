@@ -43,12 +43,11 @@ app.get('/api/hello', async (req, res) => {
           console.error(`Error fetching user from Auth0 for sub ${row.sub}:`, authError);
         }
       }
-      // Remove 'sub' from the response data
-      const { sub, ...rowWithoutSub } = row;
-      return { ...rowWithoutSub, userName };
+      // Remove 'sub' from the response data:
+      // const { sub, ...rowWithoutSub } = row;
+      return { ...row, userName };
     }));
 
-    console.log(enrichedRows);
 
     res.json({ 
       message: `Hello! Found ${enrichedRows.length} entries.`, 
@@ -70,6 +69,29 @@ app.post('/api/add-word', (req, res) => {
     }
     res.json({ message: 'Word added successfully', newRowId: this.lastID });
   });
+});
+
+app.get('/api/user-words', (req, res) => {
+  const { sub } = req.query;
+
+  db.all("SELECT * FROM dict WHERE sub = ?", [sub], (err, rows) => {
+    if (err) {
+      res.status(500).json({ error: err.message });
+      return;
+    }
+    res.json({ words: rows });
+  });
+});
+
+app.get('/api/user', async (req, res) => {
+  const { sub } = req.query;
+  try {
+    const user = await auth0.users.get({ id: sub });
+    res.json(user);
+  } catch (error) {
+    console.error('Error fetching user data:', error);
+    res.status(500).json({ error: 'An error occurred while fetching user data' });
+  }
 });
 
 const auth0 = new ManagementClient({

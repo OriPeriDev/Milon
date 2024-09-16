@@ -15,36 +15,39 @@
 }
 
 .Upload form div {
-  margin-bottom: 15px;
+  margin-bottom: 20px;
+  width: 100%;
 }
 
 .Upload label {
+  color: white;
   display: block;
   margin-bottom: 5px;
   font-weight: bold;
 }
 
 .Upload input[type="text"],
-.Upload textarea {
+.Upload textarea,
+.Upload button {
   width: 100%;
-  padding: 8px;
+  padding: 10px;
   border: 1px solid #ddd;
   border-radius: 4px;
+  box-sizing: border-box;
 }
 
 .Upload textarea {
-  height: 100px;
-  resize: vertical;
+  height: 120px;
+  resize: none;
 }
 
 .Upload button {
   background-color: #4CAF50;
   color: white;
-  padding: 10px 15px;
   border: none;
-  border-radius: 4px;
   cursor: pointer;
   font-size: 16px;
+  transition: background-color 0.3s ease;
 }
 
 .Upload button:hover {
