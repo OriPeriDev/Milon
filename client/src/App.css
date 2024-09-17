@@ -1,10 +1,20 @@
 :root {
   --text-color: #FFE347;
   --font-primary: 'Assistant', sans-serif;
+  --bg-color: #08042A;
+  --grid-color: rgba(255, 255, 255, 0.03);
+  --glow-color: rgba(255, 227, 71, 0.1);
 }
 
 body {
-  background-color: #08042A;
+  background-color: var(--bg-color);
+  background-image: 
+    linear-gradient(var(--grid-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-color) 1px, transparent 1px),
+    linear-gradient(to right, transparent 0%, var(--glow-color) 50%, transparent 100%);
+  background-size: 20px 20px, 20px 20px, 100% 100%;
+  background-position: center center, center center, center;
+  background-repeat: repeat, repeat, no-repeat;
   margin: 0;
   padding: 0;
   font-family: var(--font-primary);
