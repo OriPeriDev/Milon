@@ -77,7 +77,7 @@ function Home() {
             ))}
           </ul>
           {loading && <p>Loading more...</p>}
-          {!data.hasMore && <p>No more entries to load.</p>}
+          {/* {!data.hasMore && <p>No more entries to load.</p>} */}
         </>
       )}
     </div>

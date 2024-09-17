@@ -36,6 +36,7 @@
 
 .Home li:hover {
   background-color: #0e075a;
+  transition: background-color 0.3s ease;
 }
 
 .Home li h1 {

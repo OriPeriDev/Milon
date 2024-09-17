@@ -15,10 +15,43 @@ body {
   background-size: 20px 20px, 20px 20px, 100% 100%;
   background-position: center center, center center, center;
   background-repeat: repeat, repeat, no-repeat;
+  background-attachment: fixed;
+  min-height: 100vh;
   margin: 0;
   padding: 0;
   font-family: var(--font-primary);
   font-weight: 400;
+  cursor: none;
+}
+
+/* Cursor tailwind effect */
+.cursor-dot,
+.cursor-dot-outline {
+  pointer-events: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  border-radius: 50%;
+  opacity: 0;
+  transform: translate(-50%, -50%);
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+  z-index: 9999;
+}
+
+.cursor-dot {
+  width: 8px;
+  height: 8px;
+  background-color: var(--text-color);
+  box-shadow: 0 0 10px 2px var(--text-color);
+  filter: blur(1px);
+}
+
+.cursor-dot-outline {
+  width: 40px;
+  height: 40px;
+  background-color: rgba(255, 227, 71, 0.2);
+  box-shadow: 0 0 20px 5px rgba(255, 227, 71, 0.4);
+  filter: blur(3px);
 }
 
 .App {

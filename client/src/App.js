@@ -8,7 +8,6 @@ import './App.css';
 import Profile from './Profile';
 import { useUser } from './UserContext';
 
-
 function NavBar() {
   const { isAuthenticated, loginWithRedirect, logout, user } = useAuth0();
   const [showMenu, setShowMenu] = useState(false);
@@ -79,25 +78,87 @@ function NavBar() {
   );
 }
 
+function CursorTailwind() {
+  const cursorDotOutline = useRef(null);
+  const cursorDot = useRef(null);
+
+  const requestRef = useRef(null);
+  const previousTimeRef = useRef(null);
+
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [width, setWidth] = useState(window.innerWidth);
+  const [height, setHeight] = useState(window.innerHeight);
+
+  useEffect(() => {
+    const mouseMoveHandler = (event) => {
+      const { clientX, clientY } = event;
+      setMousePosition({ x: clientX, y: clientY });
+    };
+    document.addEventListener("mousemove", mouseMoveHandler);
+
+    const resizeHandler = () => {
+      setWidth(window.innerWidth);
+      setHeight(window.innerHeight);
+    };
+    window.addEventListener("resize", resizeHandler);
+
+    return () => {
+      document.removeEventListener("mousemove", mouseMoveHandler);
+      window.removeEventListener("resize", resizeHandler);
+    };
+  }, []);
+
+  const animateDotOutline = (time) => {
+    if (previousTimeRef.current !== undefined) {
+      const { x, y } = mousePosition;
+      const dotOutline = cursorDotOutline.current;
+      const dot = cursorDot.current;
+
+      dotOutline.style.top = `${y}px`;
+      dotOutline.style.left = `${x}px`;
+      dotOutline.style.opacity = "1";
+
+      dot.style.top = `${y}px`;
+      dot.style.left = `${x}px`;
+      dot.style.opacity = "1";
+    }
+    previousTimeRef.current = time;
+    requestRef.current = requestAnimationFrame(animateDotOutline);
+  };
+
+  useEffect(() => {
+    requestRef.current = requestAnimationFrame(animateDotOutline);
+    return () => cancelAnimationFrame(requestRef.current);
+  }, [mousePosition]);
+
+  return (
+    <>
+      <div ref={cursorDotOutline} className="cursor-dot-outline"></div>
+      <div ref={cursorDot} className="cursor-dot"></div>
+    </>
+  );
+}
+
 function App() {
   return (
     <UserProvider>
-        <Auth0Provider
-          domain={process.env.REACT_APP_AUTH0_DOMAIN}
-          clientId={process.env.REACT_APP_AUTH0_CLIENT_ID}
-          authorizationParams={{
-            redirect_uri: window.location.origin
-          }}
-        >
-          <div className="App">
-            <NavBar />
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/upload" element={<Upload />} />
-              <Route path="/profile" element={<Profile />} />
-            </Routes>
-          </div>
-        </Auth0Provider>
+      <Auth0Provider
+        domain={process.env.REACT_APP_AUTH0_DOMAIN}
+        clientId={process.env.REACT_APP_AUTH0_CLIENT_ID}
+        authorizationParams={{
+          redirect_uri: window.location.origin
+        }}
+      >
+        <div className="App">
+          <NavBar />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/upload" element={<Upload />} />
+            <Route path="/profile" element={<Profile />} />
+          </Routes>
+          <CursorTailwind />
+        </div>
+      </Auth0Provider>
     </UserProvider>
   );
 }
