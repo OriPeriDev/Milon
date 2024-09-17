@@ -26,15 +26,11 @@ app.get('/api/hello', async (req, res) => {
 
   try {
     const rows = await new Promise((resolve, reject) => {
-      db.all("SELECT * FROM dict LIMIT ? OFFSET ?", [limit, offset], (err, rows) => {
+      db.all("SELECT * FROM dict ORDER BY RANDOM() LIMIT ?", [limit], (err, rows) => {
         if (err) reject(err);
         else resolve(rows);
       });
     });
-
-    if (rows.length === 0) {
-      return res.json({ message: 'No words found in the dictionary.' });
-    }
 
     const enrichedRows = await Promise.all(rows.map(async (row) => {
       let userName = 'Unknown User';
@@ -63,12 +59,40 @@ app.get('/api/hello', async (req, res) => {
       message: `Hello! Found ${totalCount} entries.`, 
       rows: enrichedRows,
       totalCount,
-      hasMore: offset + limit < totalCount
+      hasMore: true // Always set to true
     });
   } catch (error) {
     console.error('Error:', error);
     res.status(500).json({ error: 'An error occurred while processing the request' });
   }
+});
+
+app.get('/api/search', async (req, res) => {
+  const { q } = req.query;
+
+  const rows = await new Promise((resolve, reject) => {
+    db.all("SELECT * FROM dict WHERE word LIKE ? OR definition LIKE ?", [q, q], (err, rows) => {
+      if (err) reject(err);
+      else resolve(rows);
+    });
+  });
+
+  const enrichedRows = await Promise.all(rows.map(async (row) => {
+    let userName = 'Unknown User';
+    if (row.sub) {
+      try {
+        const response = await auth0.users.get({ id: row.sub });
+        const userData = response.data;
+        userName = userData.nickname || userData.name || 'Anonymous';
+      } catch (authError) {
+        console.error(`Error fetching user from Auth0 for sub ${row.sub}:`, authError);
+      }
+    }
+    // Remove 'sub' from the response data:
+    // const { sub, ...rowWithoutSub } = row;
+    return { ...row, userName };
+  }));
+  res.json({ results: enrichedRows });
 });
 
 app.post('/api/add-word', (req, res) => {
@@ -127,6 +151,8 @@ app.get('/users', async (req, res) => {
     res.status(500).json({ error: 'An error occurred while fetching users' });
   }
 });
+
+
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);

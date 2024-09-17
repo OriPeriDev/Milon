@@ -21,11 +21,11 @@ body {
   padding: 0;
   font-family: var(--font-primary);
   font-weight: 400;
-  cursor: none;
+  /* cursor: none; */
 }
 
 /* Cursor tailwind effect */
-.cursor-dot,
+/* .cursor-dot,
 .cursor-dot-outline {
   pointer-events: none;
   position: fixed;
@@ -36,23 +36,23 @@ body {
   transform: translate(-50%, -50%);
   transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
   z-index: 9999;
-}
+} */
 
-.cursor-dot {
+/* .cursor-dot {
   width: 8px;
   height: 8px;
   background-color: var(--text-color);
   box-shadow: 0 0 10px 2px var(--text-color);
   filter: blur(1px);
-}
+} */
 
-.cursor-dot-outline {
+/* .cursor-dot-outline {
   width: 40px;
   height: 40px;
   background-color: rgba(255, 227, 71, 0.2);
   box-shadow: 0 0 20px 5px rgba(255, 227, 71, 0.4);
   filter: blur(3px);
-}
+} */
 
 .App {
   color: var(--text-color);
@@ -96,24 +96,45 @@ body {
 }
 
 nav {
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  background-color: #443259;
-  padding: 15px 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-family: var(--font-primary);
+  padding: 15px 20px;
+  background-color: #443259;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .nav-left, .nav-right {
+  flex: 0 0 auto;
   display: flex;
   align-items: center;
+  z-index: 1;
 }
 
-.nav-right {
-  gap: 10px;
+.nav-center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 800px; /* Adjust this value to set the maximum width of the search bar */
+  padding: 0 20px; /* Add some padding on the sides */
+  box-sizing: border-box;
+}
+
+.nav-center form {
+  display: flex;
+  width: 100%;
+}
+
+.nav-center input {
+  flex-grow: 1;
+  padding: 8px;
+  border: none;
+  border-radius: 4px 0 0 4px;
+  font-family: var(--font-primary);
 }
 
 nav a, nav button {
@@ -174,4 +195,15 @@ nav button {
 
 .profile-menu button:hover {
   background-color: rgba(255, 255, 255, 0.1);
+}
+
+.nav-center button {
+  padding: 8px 12px;
+  border: none;
+  background-color: var(--text-color);
+  color: var(--bg-color);
+  border-radius: 0 4px 4px 0;
+  cursor: pointer;
+  font-family: var(--font-primary);
+  font-weight: 500;
 }

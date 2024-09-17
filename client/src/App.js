@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { UserProvider } from './UserContext';
 import { Link, Routes, Route, useNavigate, BrowserRouter as Router } from 'react-router-dom';
 import { Auth0Provider, useAuth0 } from '@auth0/auth0-react';
@@ -7,6 +7,7 @@ import Upload from './Upload';
 import './App.css';
 import Profile from './Profile';
 import { useUser } from './UserContext';
+import SearchResults from './SearchResault';
 
 function NavBar() {
   const { isAuthenticated, loginWithRedirect, logout, user } = useAuth0();
@@ -16,6 +17,7 @@ function NavBar() {
   const { setSelectedUser } = useUser();
   const { sub } = user || {};
   const userName = user?.nickname || user?.name || 'Anonymous';
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     if (isAuthenticated && user) {
@@ -23,12 +25,16 @@ function NavBar() {
     }
   }, [isAuthenticated, user, setSelectedUser, sub, userName]);
 
-
   const handleProfileClick = () => {
     setShowMenu(false);
     setSelectedUser({ sub, userName });
     navigate('/profile');
   };
+
+  const handleSearch = useCallback((e) => {
+    e.preventDefault();
+    navigate(`/search?q=${encodeURIComponent(searchTerm)}`);
+  }, [searchTerm, navigate]);
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -47,6 +53,17 @@ function NavBar() {
     <nav>
       <div className="nav-left">
         <Link to="/">Home</Link>
+      </div>
+      <div className="nav-center">
+        <form onSubmit={handleSearch}>
+          <input
+            type="text"
+            placeholder="Search..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          <button type="submit">Search</button>
+        </form>
       </div>
       <div className="nav-right">
         <Link to="/upload">Upload</Link>
@@ -155,6 +172,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/upload" element={<Upload />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/search" element={<SearchResults />} />
           </Routes>
           <CursorTailwind />
         </div>

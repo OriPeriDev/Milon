@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useUser } from './UserContext';
 import './Home.css';
 
@@ -36,10 +36,9 @@ function Home() {
 
   const handleScroll = () => {
     if (
-      window.innerHeight + document.documentElement.scrollTop ===
-        document.documentElement.offsetHeight &&
-      !loading &&
-      data.hasMore
+      window.innerHeight + document.documentElement.scrollTop >=
+        document.documentElement.offsetHeight - 100 &&
+      !loading
     ) {
       setPage(prevPage => prevPage + 1);
     }
@@ -48,7 +47,7 @@ function Home() {
   useEffect(() => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [loading, data.hasMore]);
+  }, [loading]);
 
   return (
     <div className="Home">
@@ -57,8 +56,8 @@ function Home() {
       ) : (
         <>
           <ul>
-            {data.rows.map(row => (
-              <li key={row.id}>
+            {data.rows.map((row, index) => (
+              <li key={`${row.id}-${index}`}>
                 <h3 className='word'>{row.word}</h3>
                 <p className='definition'>{row.definition}</p>
                 <p className='sub'>
@@ -77,7 +76,6 @@ function Home() {
             ))}
           </ul>
           {loading && <p>Loading more...</p>}
-          {/* {!data.hasMore && <p>No more entries to load.</p>} */}
         </>
       )}
     </div>
